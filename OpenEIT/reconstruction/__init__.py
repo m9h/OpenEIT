@@ -20,7 +20,7 @@ from .worker import ReconstructionWorker
 from .greit import GreitReconstruction
 from .jac import JacReconstruction
 from .bp import BpReconstruction
-from .pyeit import mesh 
-from .pyeit.eit.utils import eit_scan_lines
-from .pyeit.eit.greit import GREIT as greit
-from .pyeit.eit.fem import Forward
+from pyeit import mesh
+from pyeit.eit import protocol
+from pyeit.eit.greit import GREIT as greit
+from pyeit.eit.fem import EITForward

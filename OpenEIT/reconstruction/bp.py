@@ -15,10 +15,9 @@ import time
 import threading
 
 import numpy as np
-from .pyeit import mesh 
-from .pyeit.eit.utils import eit_scan_lines
-from .pyeit.eit.bp import BP as bp
-from .pyeit.eit.fem import Forward
+from pyeit import mesh
+from pyeit.eit import protocol
+from pyeit.eit.bp import BP as bp
 
 logger = logging.getLogger(__name__)
 
@@ -39,12 +38,15 @@ class BpReconstruction:
         self.el_dist = int(self.n_el/2) # random initialize number 
 
         # we create this according to an opposition protocol to maximize contrast. 
-        self.ex_mat = eit_scan_lines(ne = self.n_el, dist = self.el_dist)
+        # opposition drive, adjacent measurement: the pattern the firmware scans
+        self.protocol = protocol.create(self.n_el, dist_exc=self.el_dist, step_meas=self.step, parser_meas='std')
+        self.ex_mat = self.protocol.ex_mat
         """ 0. construct mesh """
         # h0 is initial mesh size. , h0=0.1
-        self.mesh_obj, self.el_pos = mesh.create(self.n_el)
+        self.mesh_obj = mesh.create(self.n_el)
+        self.el_pos = self.mesh_obj.el_pos
         """ 3. Set Up BP """
-        self.eit =  bp(self.mesh_obj,self.el_pos, ex_mat=self.ex_mat, step=self.step, parser='std')
+        self.eit = bp(self.mesh_obj, self.protocol)
 
         self.eit.setup(weight='none')
 

@@ -68,8 +68,8 @@ class ReconstructionWorker(threading.Thread):
 
     def get_plot_params(self):
         mesh_obj = self._reconstruction.mesh_obj
-        pts = mesh_obj['node']
-        tri = mesh_obj['element']
+        pts = mesh_obj.node
+        tri = mesh_obj.element
         x = pts[:, 0]
         y = pts[:, 1]
         el_pos = self._reconstruction.el_pos

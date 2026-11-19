@@ -14,11 +14,10 @@ import time
 import threading
 
 import numpy as np
-from .pyeit import mesh 
-from .pyeit.eit.utils import eit_scan_lines
-from .pyeit.eit.jac import JAC as jacobian
-from .pyeit.eit.fem import Forward
-from .pyeit.eit.interp2d import sim2pts
+from pyeit import mesh
+from pyeit.eit import protocol
+from pyeit.eit.jac import JAC as jacobian
+from pyeit.eit.interp2d import sim2pts
 
 logger = logging.getLogger(__name__)
 
@@ -68,21 +67,24 @@ class JacReconstruction:
         self.el_dist = int(self.n_el/2)
         self.step = 1 
         # we create this according to an opposition protocol to maximize contrast. 
-        self.ex_mat = eit_scan_lines(ne = self.n_el, dist = self.el_dist)
+        # opposition drive, adjacent measurement: the pattern the firmware scans
+        self.protocol = protocol.create(self.n_el, dist_exc=self.el_dist, step_meas=self.step, parser_meas='std')
+        self.ex_mat = self.protocol.ex_mat
 
         """ 0. construct mesh """
         # h0 is initial mesh size. , h0=0.1
-        self.mesh_obj, self.el_pos = mesh.create(n_el)
+        self.mesh_obj = mesh.create(n_el)
+        self.el_pos = self.mesh_obj.el_pos
 
         """ 3. Set Up JAC """
-        self.eit = jacobian(self.mesh_obj, self.el_pos, ex_mat=self.ex_mat, step=self.step,perm=1.)
+        self.eit = jacobian(self.mesh_obj, self.protocol)
 
         # parameter tuning is needed for better EIT images
-        self.eit.setup(p=0.5, lamb=0.4, method='kotre')
+        self.eit.setup(p=0.5, lamb=0.4, method='kotre', perm=1.)
         logger.info("JAC mesh set up ")
         self.ds  = None
-        self.pts = self.mesh_obj['node']
-        self.tri = self.mesh_obj['element']
+        self.pts = self.mesh_obj.node
+        self.tri = self.mesh_obj.element
         print ('completed jac reset')
 
     def update_reference(self,data):

@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import math
 import OpenEIT.dashboard
 import OpenEIT.reconstruction 
+from pyeit.mesh.wrapper import PyEITAnomaly_Circle
 
 
 """ GREIT calls """
@@ -47,10 +48,10 @@ for i in range(length):
 	print (i)
 	xval = circlepts[i,0] 
 	yval = circlepts[i,1]
-	anomaly = [{'x': xval,  'y': 0,    'd': 0.1, 'perm': 10},
-	           {'x': -xval, 'y': 0,    'd': 0.1, 'perm': 10},
-	           {'x': 0,    'y': yval,  'd': 0.1, 'perm': 0.1},
-	           {'x': 0,    'y': -yval, 'd': 0.1, 'perm': 0.1}]
+	anomaly = [PyEITAnomaly_Circle(center=[xval, 0],  r=0.1, perm=10),
+	           PyEITAnomaly_Circle(center=[-xval, 0], r=0.1, perm=10),
+	           PyEITAnomaly_Circle(center=[0, yval],  r=0.1, perm=0.1),
+	           PyEITAnomaly_Circle(center=[0, -yval], r=0.1, perm=0.1)]
 	mesh_new = OpenEIT.reconstruction.mesh.set_perm(mesh_obj, anomaly=anomaly, background=1.0)
 	
 
@@ -71,15 +72,15 @@ for i in range(length):
 
 	""" 2. FEM forward simulations """
 	# calculate simulated data
-	fwd = OpenEIT.reconstruction.Forward(mesh_obj, el_pos)
+	fwd = OpenEIT.reconstruction.EITForward(mesh_obj, g.protocol)
 	# f0 = fwd.solve_eit(ex_mat, step=step, perm=mesh_obj['perm'])
-	f1 = fwd.solve_eit(ex_mat, step=step, perm=mesh_new['perm'])
+	f1 = fwd.solve_eit(perm=mesh_new.perm)
 
 	# g.update_reference(f0.v)
 	# data must be appropriately formatted, then send to image reconstruction. 
 	# data = f1.v.tolist()
 
-	info = f1.v
+	info = f1
 
 	print (len(info))
 

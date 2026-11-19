@@ -60,8 +60,8 @@ difference_image = g.eit_reconstruction(f1)
 mesh_obj = g.mesh_obj
 el_pos = g.el_pos
 ex_mat = g.ex_mat
-pts     = g.mesh_obj['node']
-tri = g.mesh_obj['element']
+pts     = g.mesh_obj.node
+tri = g.mesh_obj.element
 x   = pts[:, 0]
 y   = pts[:, 1]
 
