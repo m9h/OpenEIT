@@ -100,6 +100,24 @@ python simdata.py
 
 ```
 
+## Checking the board and the install
+
+Before opening the dashboard you can confirm that the board is streaming. This listens on the serial port for ten seconds and reports frame length, frame rate, open-circuit channels and frame-to-frame noise:
+
+```
+python tools/spectra_probe.py
+```
+
+The board only appears as a serial port when its power switch is on: the USB chip is powered from the switched 3.3 V rail, not from the USB cable.
+
+To run the tests (line parsing and the three reconstruction methods, using frames captured from a real board):
+
+```
+pip install pytest
+python -m pytest tests
+```
+
+
 Outputs a simdata.txt file in the same format as the EIT dashboard. 
 
 You can also use the main software to do either time series or bioimpedance spectroscopy. Instructions for these can be found in the readthedocs tutorials. 
