@@ -20,7 +20,7 @@ uv sync
 uv run app.py
 ```
 
-`uv run python -m pytest` runs the tests.
+`uv run pytest` runs the tests.
 
 ## Install with pip
 
