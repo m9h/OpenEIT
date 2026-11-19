@@ -9,14 +9,24 @@ SPECTRA uses an FTDI chip to communicate via UART. The VCP FTDI driver is not pr
 ##  How to install the python dashboard. 
 
 ## Requirements
+
+[uv](https://docs.astral.sh/uv/) is the recommended way to set up. It installs the right Python (3.11) and the exact package versions recorded in `uv.lock`, in a `.venv` folder inside the checkout, without touching any other Python on your machine.
+
+## Install and run
 ```
-Python 3.11.1
+git clone https://github.com/OpenEIT/OpenEIT.git
+cd OpenEIT
+uv sync
+uv run app.py
 ```
 
-## Install
+`uv run python -m pytest` runs the tests.
+
+## Install with pip
+
+If you would rather not use uv, you need Python 3.11 and:
 ```
 pip install -r requirements.txt
-
 ```
 If you have any problems, it's likely that the requirements installation didn't complete, and you have incorrect versions of the modules installed. The following command will check the version of a single module, and you should check each module to ensure it is the same as listed in the requirements.txt file. 
 
@@ -113,8 +123,7 @@ The board only appears as a serial port when its power switch is on: the USB chi
 To run the tests (line parsing and the three reconstruction methods, using frames captured from a real board):
 
 ```
-pip install pytest
-python -m pytest tests
+uv run pytest
 ```
 
 

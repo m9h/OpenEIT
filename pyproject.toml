@@ -1,0 +1,31 @@
+[project]
+name = "openeit-dashboard"
+version = "0.1.0"
+description = "Dashboard for the OpenEIT Spectra board: time series, bioimpedance spectroscopy and EIT imaging"
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+requires-python = "==3.11.*"
+# Same pins as requirements.txt; keep the two in step.
+dependencies = [
+    "imageio==2.37.0",
+    "matplotlib==3.7.0",
+    "numpy==1.24.1",
+    "pyserial==3.5",
+    "scikit-image==0.25.2",
+    "scipy==1.15.2",
+    "six==1.16.0",
+    "dash==3.0.2",
+    "plotly==6.0.1",
+    "future==0.18.3",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv]
+# The dashboard is run from the checkout (uv run app.py), not installed as a package.
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
